@@ -58,7 +58,7 @@ Image slider links:
 | `multi_conditioning` | <blockquote> For each prompt, the list is obtained by splitting the prompt using the `AND` separator. <br>See: [Compositional Visual Generation with Composable Diffusion Models](https://energy-based-model.github.io/Compositional-Visual-Generation-with-Composable-Diffusion-Models/) </blockquote> <ul><li>a way to use multiple prompts at once</li><li>supports weights for prompts: `a cat :1.2 AND a dog AND a penguin :2.2` (for non-comfy parsers). The weights default to 1</li><li>each prompt gets a cfg value of `cfg * weight / N`, where `N` is the number of positive prompts. In `stable-diffusion-webui`, each prompt gets a cfg value of `cfg * weight`. To match their behaviour, you can add a weight of `:N` to every prompt _or_ simply set a cfg value of `cfg * N`</li></ul> |
 |`use_old_emphasis_implementation`| <blockquote>Use old emphasis implementation. Can be useful to reproduce old seeds.</blockquote>|
 
-> [!TIP]  
+> [!TIP]
 > You can right click the node to show/hide some of the widgets. E.g. the `with_SDXL` option.
 
 <br>
@@ -72,10 +72,10 @@ Image slider links:
 | `compel`          | Uses [`compel`](https://github.com/damian0815/compel)                            |
 | `fixed attention` | Prompt is untampered with                                                        |
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > Every `parser` except `comfy` uses `stable-diffusion-webui`'s encoding pipeline.
 
-> [!WARNING]  
+> [!WARNING]
 > LoRA syntax (`<lora:name:1.0>`) is not suppprted.
 
 ## Settings
@@ -155,3 +155,7 @@ git pull
 * [comfyanonymous](https://github.com/comfyanonymous) / [ComfyUI](https://github.com/comfyanonymous/ComfyUI)
 * [vladmandic](https://github.com/vladmandic) / [SD.Next](https://github.com/vladmandic/automatic)
 * [lllyasviel](https://github.com/lllyasviel) / [stable-diffusion-webui-forge](https://github.com/lllyasviel/stable-diffusion-webui-forge)
+
+## Note
+This is a fork of [ComfyUI_smZNodes](https://github.com/shiimizu/ComfyUI_smZNodes) with ComfyUI V3 compatibility.
+Original README below.
