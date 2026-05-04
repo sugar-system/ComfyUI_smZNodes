@@ -7,7 +7,44 @@ import comfy.sd
 import comfy.model_management
 import comfy.samplers
 from .smZNodes import HijackClip, HijackClipComfy, get_learned_conditioning
-from comfy_extras.nodes_clip_sdxl import CLIPTextEncodeSDXL
+
+
+def _encode_sdxl(clip, width, height, crop_w, crop_h, target_width, target_height, text_g, text_l):
+    tokens = clip.tokenize(text_g)
+    tokens["l"] = clip.tokenize(text_l)["l"]
+    if len(tokens["l"]) != len(tokens["g"]):
+        empty = clip.tokenize("")
+        while len(tokens["l"]) < len(tokens["g"]):
+            tokens["l"] += empty["l"]
+        while len(tokens["g"]) < len(tokens["l"]):
+            tokens["g"] += empty["g"]
+    add_dict = {
+        "width": width, "height": height,
+        "crop_w": crop_w, "crop_h": crop_h,
+        "target_width": target_width, "target_height": target_height,
+    }
+    if hasattr(clip, "encode_from_tokens_scheduled"):
+        return (clip.encode_from_tokens_scheduled(tokens, add_dict=add_dict), )
+    cond, pooled = clip.encode_from_tokens(tokens, return_pooled=True)
+    return ([[cond, {"pooled_output": pooled, **add_dict}]], )
+
+
+def _encode_sdxl_refiner(clip, ascore, width, height, text):
+    tokens = clip.tokenize(text)
+    add_dict = {"aesthetic_score": ascore, "width": width, "height": height}
+    if hasattr(clip, "encode_from_tokens_scheduled"):
+        return (clip.encode_from_tokens_scheduled(tokens, add_dict=add_dict), )
+    cond, pooled = clip.encode_from_tokens(tokens, return_pooled=True)
+    return ([[cond, {"pooled_output": pooled, **add_dict}]], )
+
+
+def _encode_clip(clip, text):
+    tokens = clip.tokenize(text)
+    if hasattr(clip, "encode_from_tokens_scheduled"):
+        return (clip.encode_from_tokens_scheduled(tokens), )
+    cond, pooled = clip.encode_from_tokens(tokens, return_pooled=True)
+    return ([[cond, {"pooled_output": pooled}]], )
+
 
 class smZ_CLIPTextEncode:
     @classmethod
@@ -68,13 +105,11 @@ class smZ_CLIPTextEncode:
         def _comfy_path(clip, text):
             nonlocal on_sdxl, class_name, ascore, width, height, crop_w, crop_h, target_width, target_height, text_g, text_l
             if on_sdxl and class_name == "SDXLClipModel":
-                return CLIPTextEncodeSDXL().encode(clip, width, height, crop_w, crop_h, target_width, target_height, text_g, text_l)
+                return _encode_sdxl(clip, width, height, crop_w, crop_h, target_width, target_height, text_g, text_l)
             elif on_sdxl and class_name == "SDXLRefinerClipModel":
-                from comfy_extras.nodes_clip_sdxl import CLIPTextEncodeSDXLRefiner
-                return CLIPTextEncodeSDXLRefiner().encode(clip, clip, ascore, width, height, text)
+                return _encode_sdxl_refiner(clip, ascore, width, height, text)
             else:
-                from nodes import CLIPTextEncode
-                return CLIPTextEncode().encode(clip, text)
+                return _encode_clip(clip, text)
 
         def comfy_path(clip):
             nonlocal text
@@ -100,7 +135,9 @@ class smZ_CLIPTextEncode:
             steps = max(smZ_steps, 1)
             if on_sdxl and class_name == "SDXLClipModel":
                 # skip prompt-editing
-                schedules = CLIPTextEncodeSDXL().encode(clip, width, height, crop_w, crop_h, target_width, target_height, [text_g], [text_l])[0]
+                # Inside HijackClip the tokenizer is replaced by ClassicTextProcessingEngine.tokenize_with_weights,
+                # which iterates `for text in texts` and so requires a list of strings, not a single string.
+                schedules = _encode_sdxl(clip, width, height, crop_w, crop_h, target_width, target_height, [text_g], [text_l])[0]
             else:
                 schedules = get_learned_conditioning(model, [text], steps, multi_conditioning)
         if on_sdxl and class_name == "SDXLRefinerClipModel":
