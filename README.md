@@ -1,3 +1,5 @@
+**Note:**
+This is a fork of [ComfyUI_smZNodes](https://github.com/shiimizu/ComfyUI_smZNodes) with ComfyUI V3 compatibility.
 
 # smZNodes
 A selection of custom nodes for [ComfyUI](https://github.com/comfyanonymous/ComfyUI).
@@ -108,46 +110,27 @@ This node can change whenever it is updated, so you may have to **recreate** it 
 
 ## Installation
 
-Three methods are available for installation:
+Two methods are available for installation:
 
-1. Load via [ComfyUI Manager](https://github.com/ltdrdata/ComfyUI-Manager)
-2. Clone the repository directly into the extensions directory.
-3. Download the project manually.
+1. Clone the repository directly into the extensions directory.
+2. Download the project manually.
 
-
-### Load via ComfyUI Manager
-
-
-<div align="center">
-    <img width="1207" alt="ComfyUI Manager" src="https://github.com/shiimizu/ComfyUI_smZNodes/assets/54494639/310d934d-c8db-4c4a-af2a-7a26938eb751">
-    <p>Install via ComfyUI Manager</p>
-</div>
 
 ### Clone Repository
 
 ```shell
 cd path/to/your/ComfyUI/custom_nodes
-git clone https://github.com/shiimizu/ComfyUI_smZNodes.git
+git clone https://github.com/sugar-system/ComfyUI_smZNodes
 ```
 
 ### Download Manually
 
-1. Download the project archive from [here](https://github.com/shiimizu/ComfyUI_smZNodes/archive/refs/heads/main.zip).
+1. Download the project archive from [here](https://github.com/sugar-system/ComfyUI_smZNodes/archive/refs/heads/main.zip).
 2. Extract the downloaded zip file.
 3. Move the extracted files to `path/to/your/ComfyUI/custom_nodes`.
 4. Restart ComfyUI
 
 The folder structure should resemble: `path/to/your/ComfyUI/custom_nodes/ComfyUI_smZNodes`.
-
-
-### Update
-
-To update the extension, update via [ComfyUI Manager](https://github.com/ltdrdata/ComfyUI-Manager) or pull the latest changes from the repository:
-
-```shell
-cd path/to/your/ComfyUI/custom_nodes/ComfyUI_smZNodes
-git pull
-```
 
 ## Credits
 
@@ -156,6 +139,3 @@ git pull
 * [vladmandic](https://github.com/vladmandic) / [SD.Next](https://github.com/vladmandic/automatic)
 * [lllyasviel](https://github.com/lllyasviel) / [stable-diffusion-webui-forge](https://github.com/lllyasviel/stable-diffusion-webui-forge)
 
-## Note
-This is a fork of [ComfyUI_smZNodes](https://github.com/shiimizu/ComfyUI_smZNodes) with ComfyUI V3 compatibility.
-Original README below.
